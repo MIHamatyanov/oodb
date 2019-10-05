@@ -52,4 +52,13 @@ public class Client extends Person {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                super.toString() +
+                ", bankAccounts=" + bankAccounts +
+                '}';
+    }
 }

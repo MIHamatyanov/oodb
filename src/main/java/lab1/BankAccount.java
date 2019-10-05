@@ -31,4 +31,13 @@ class BankAccount {
             return true;
         }
     }
+
+    @Override
+    public String toString() {
+        return "BankAccount{" +
+                "id=" + id +
+                ", accountNumber=" + accountNumber +
+                ", balance=" + balance +
+                '}';
+    }
 }

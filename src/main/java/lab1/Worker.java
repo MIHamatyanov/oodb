@@ -26,4 +26,14 @@ public class Worker extends Person {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "Worker{" +
+                "id=" + id +
+                super.toString() +
+                ", position='" + position + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

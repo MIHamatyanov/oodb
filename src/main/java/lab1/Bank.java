@@ -12,6 +12,10 @@ public class Bank {
         return name;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -34,5 +38,20 @@ public class Bank {
         if (!clients.contains(client)) {
             clients.add(client);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bank { id = " + id + ", name='" + name + "'\nworkers: [\n");
+        for (Worker worker : workers) {
+            sb.append(worker.toString() + "\n");
+        }
+        sb.append("]\nclients: [\n");
+        for (Client client : clients) {
+            sb.append(client.toString() + "\n");
+        }
+        sb.append("]\n}");
+        return sb.toString();
     }
 }
