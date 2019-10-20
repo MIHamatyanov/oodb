@@ -1,5 +1,7 @@
-package lab1;
+package lab3.model;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.List;
 
 public class Bank {
@@ -8,24 +10,42 @@ public class Bank {
     private List<Worker> workers;
     private List<Client> clients;
 
-    public String getName() {
-        return name;
-    }
-
+    @XmlElement(name = "id")
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @XmlElement(name = "bank")
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    @XmlElementWrapper(name = "workers")
+    @XmlElement(name = "worker")
     public List<Worker> getWorkers() {
         return workers;
     }
 
+    public void setWorkers(List<Worker> workers) {
+        this.workers = workers;
+    }
+
+    @XmlElementWrapper(name = "clients")
+    @XmlElement(name = "client")
     public List<Client> getClients() {
         return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
     }
 
     public void addWorker(Worker worker) {
