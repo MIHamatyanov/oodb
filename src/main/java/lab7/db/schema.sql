@@ -39,7 +39,7 @@ create table bankaccount
     primary key (id)
 );
 
-create table client_bankaccounts
+create table client_bankaccount
 (
     client_id      bigint not null,
     bankaccount_id bigint not null,

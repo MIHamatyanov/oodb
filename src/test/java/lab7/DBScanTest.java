@@ -1,9 +1,6 @@
 package lab7;
 
-import lab7.annotation.Entity;
-import lab7.annotation.ManyToOne;
-import lab7.annotation.OneToMany;
-import lab7.annotation.OneToOne;
+import lab7.annotation.*;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -33,8 +30,12 @@ public class DBScanTest {
                 for (Field field : c.getDeclaredFields()) {
                     if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
                         fieldNames.add(field.getName().toLowerCase().concat("_id"));
-                    } else if (field.getAnnotation(OneToMany.class) != null) {
-                        String interTableName = c.getSimpleName().toLowerCase() + "_" + field.getName().toLowerCase();
+                    } else if (field.getAnnotation(OneToMany.class) != null || field.getAnnotation(ManyToMany.class) != null) {
+                        String relationTypeName = field.getGenericType().getTypeName();
+                        String relationClassName = relationTypeName.substring(relationTypeName.indexOf("<") + 1, relationTypeName.indexOf(">"));
+                        String className = relationClassName.substring(relationClassName.lastIndexOf('.') + 1);
+
+                        String interTableName = c.getSimpleName().toLowerCase() + "_" + className.toLowerCase();
                         HashSet<String> interFields = new HashSet<>();
                         interFields.add(c.getSimpleName().toLowerCase() + "_id");
                         interFields.add(field.getName().toLowerCase() + "_id");
@@ -48,7 +49,7 @@ public class DBScanTest {
                     for (Field field : c.getSuperclass().getDeclaredFields()) {
                         if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
                             fieldNames.add(field.getName().toLowerCase().concat("_id"));
-                        } else if (field.getAnnotation(OneToMany.class) != null) {
+                        } else if (field.getAnnotation(OneToMany.class) != null || field.getAnnotation(ManyToMany.class) != null) {
                             String interTableName = c.getSimpleName().toLowerCase() + "_" + field.getName().toLowerCase();
                             HashSet<String> interFields = new HashSet<>();
                             interFields.add(c.getSimpleName().toLowerCase() + "_id");
@@ -64,7 +65,7 @@ public class DBScanTest {
             }
         });
 
-        for (Map.Entry<String, HashSet<String>> entry : classes.entrySet()) {
+        /*for (Map.Entry<String, HashSet<String>> entry : classes.entrySet()) {
             System.out.println(entry.getKey());
             entry.getValue().forEach(f -> System.out.println("\t" + f));
         }
@@ -74,7 +75,7 @@ public class DBScanTest {
         for (Map.Entry<String, HashSet<String>> entry : tables.entrySet()) {
             System.out.println(entry.getKey());
             entry.getValue().forEach(f -> System.out.println("\t" + f));
-        }
+        }*/
 
         for (Map.Entry<String, HashSet<String>> entry : classes.entrySet()) {
             String className = entry.getKey();
