@@ -36,7 +36,14 @@ create table bankaccount
     id            serial not null,
     accountnumber bigint not null,
     balance       bigint not null,
-    client_id     bigint not null,
-    primary key (id),
-    foreign key (client_id) references client (id) on delete cascade
+    primary key (id)
 );
+
+create table client_bankaccounts
+(
+    client_id      bigint not null,
+    bankaccount_id bigint not null,
+    foreign key (client_id) references client (id) on delete cascade,
+    foreign key (bankaccount_id) references bankaccount (id) on delete cascade
+);
+

@@ -2,6 +2,7 @@ package lab7;
 
 import lab7.annotation.Entity;
 import lab7.annotation.ManyToOne;
+import lab7.annotation.OneToMany;
 import lab7.annotation.OneToOne;
 import org.junit.Test;
 
@@ -10,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DBScanTest {
@@ -33,6 +33,12 @@ public class DBScanTest {
                 for (Field field : c.getDeclaredFields()) {
                     if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
                         fieldNames.add(field.getName().toLowerCase().concat("_id"));
+                    } else if (field.getAnnotation(OneToMany.class) != null) {
+                        String interTableName = c.getSimpleName().toLowerCase() + "_" + field.getName().toLowerCase();
+                        HashSet<String> interFields = new HashSet<>();
+                        interFields.add(c.getSimpleName().toLowerCase() + "_id");
+                        interFields.add(field.getName().toLowerCase() + "_id");
+                        classes.put(interTableName, interFields);
                     } else {
                         fieldNames.add(field.getName().toLowerCase());
                     }
@@ -42,6 +48,12 @@ public class DBScanTest {
                     for (Field field : c.getSuperclass().getDeclaredFields()) {
                         if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
                             fieldNames.add(field.getName().toLowerCase().concat("_id"));
+                        } else if (field.getAnnotation(OneToMany.class) != null) {
+                            String interTableName = c.getSimpleName().toLowerCase() + "_" + field.getName().toLowerCase();
+                            HashSet<String> interFields = new HashSet<>();
+                            interFields.add(c.getSimpleName().toLowerCase() + "_id");
+                            interFields.add(field.getName().toLowerCase() + "_id");
+                            classes.put(interTableName, interFields);
                         } else {
                             fieldNames.add(field.getName().toLowerCase());
                         }
@@ -52,15 +64,26 @@ public class DBScanTest {
             }
         });
 
-        for (Map.Entry<String, HashSet<String>> entry : tables.entrySet()) {
-            String tableName = entry.getKey();
-            HashSet<String> tableFields = entry.getValue();
+        for (Map.Entry<String, HashSet<String>> entry : classes.entrySet()) {
+            System.out.println(entry.getKey());
+            entry.getValue().forEach(f -> System.out.println("\t" + f));
+        }
 
-            assertTrue(classes.containsKey(tableName));
-            HashSet<String> classFields = classes.get(tableName);
-            assertEquals(tableFields.size(), classFields.size());
-            for (String fieldName : tableFields) {
-                assertTrue(classFields.contains(fieldName));
+        System.out.println("---------------");
+
+        for (Map.Entry<String, HashSet<String>> entry : tables.entrySet()) {
+            System.out.println(entry.getKey());
+            entry.getValue().forEach(f -> System.out.println("\t" + f));
+        }
+
+        for (Map.Entry<String, HashSet<String>> entry : classes.entrySet()) {
+            String className = entry.getKey();
+            HashSet<String> classFields = entry.getValue();
+
+            assertTrue(tables.containsKey(className));
+            HashSet<String> tableFields = classes.get(className);
+            for (String fieldName : classFields) {
+                assertTrue(tableFields.contains(fieldName));
             }
         }
     }

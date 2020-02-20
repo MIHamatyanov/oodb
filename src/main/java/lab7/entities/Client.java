@@ -1,9 +1,8 @@
 package lab7.entities;
 
-import lab7.annotation.Column;
-import lab7.annotation.Entity;
-import lab7.annotation.Id;
-import lab7.annotation.ManyToOne;
+import lab7.annotation.*;
+
+import java.util.List;
 
 @Entity
 public class Client extends Person{
@@ -12,6 +11,9 @@ public class Client extends Person{
     @Column
     @ManyToOne
     private Bank bank;
+    @Column
+    @OneToMany
+    private List<BankAccount> bankAccounts;
 
     public Long getId() {
         return id;
@@ -27,5 +29,13 @@ public class Client extends Person{
 
     public void setBank(Bank bank) {
         this.bank = bank;
+    }
+
+    public List<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(List<BankAccount> bankAccounts) {
+        this.bankAccounts = bankAccounts;
     }
 }
