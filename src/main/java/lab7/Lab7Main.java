@@ -1,6 +1,7 @@
 package lab7;
 
 import lab7.annotation.Entity;
+import lab7.init.EntityScan;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

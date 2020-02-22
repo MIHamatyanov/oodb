@@ -1,4 +1,4 @@
-package lab7;
+package lab7.init;
 
 import java.io.File;
 import java.net.URL;
