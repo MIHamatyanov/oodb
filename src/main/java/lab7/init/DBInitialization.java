@@ -52,20 +52,22 @@ public class DBInitialization {
 
     private static void getClassFields(HashMap<String, HashSet<String>> classes, Class<?> c, HashSet<String> fieldNames, Field[] fields) {
         for (Field field : fields) {
-            if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
-                fieldNames.add(field.getName().toLowerCase().concat("_id"));
-            } else if (field.getAnnotation(OneToMany.class) != null || field.getAnnotation(ManyToMany.class) != null) {
-                String relationTypeName = field.getGenericType().getTypeName();
-                String relationClassName = relationTypeName.substring(relationTypeName.indexOf("<") + 1, relationTypeName.indexOf(">"));
-                String className = relationClassName.substring(relationClassName.lastIndexOf('.') + 1);
+            if (field.getAnnotation(Column.class) != null) {
+                if (field.getAnnotation(ManyToOne.class) != null || field.getAnnotation(OneToOne.class) != null) {
+                    fieldNames.add(field.getName().toLowerCase().concat("_id"));
+                } else if (field.getAnnotation(OneToMany.class) != null || field.getAnnotation(ManyToMany.class) != null) {
+                    String relationTypeName = field.getGenericType().getTypeName();
+                    String relationClassName = relationTypeName.substring(relationTypeName.indexOf("<") + 1, relationTypeName.indexOf(">"));
+                    String className = relationClassName.substring(relationClassName.lastIndexOf('.') + 1);
 
-                String interTableName = c.getSimpleName().toLowerCase() + "_" + className.toLowerCase();
-                HashSet<String> interFields = new HashSet<>();
-                interFields.add(c.getSimpleName().toLowerCase() + "_id");
-                interFields.add(field.getName().toLowerCase() + "_id");
-                classes.put(interTableName, interFields);
-            } else {
-                fieldNames.add(field.getName().toLowerCase());
+                    String interTableName = c.getSimpleName().toLowerCase() + "_" + className.toLowerCase();
+                    HashSet<String> interFields = new HashSet<>();
+                    interFields.add(c.getSimpleName().toLowerCase() + "_id");
+                    interFields.add(field.getName().toLowerCase() + "_id");
+                    classes.put(interTableName, interFields);
+                } else {
+                    fieldNames.add(field.getName().toLowerCase());
+                }
             }
         }
     }

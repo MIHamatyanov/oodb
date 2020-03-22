@@ -1,18 +1,18 @@
-package lab7.entities;
+package lab9.entities;
 
-import lab7.annotation.*;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Client extends Person{
+public class Client extends Person {
     @Id
     private Long id;
-    @Column
     @ManyToOne
     private Bank bank;
-    @Column
     @OneToMany
     private List<BankAccount> bankAccounts;
 
